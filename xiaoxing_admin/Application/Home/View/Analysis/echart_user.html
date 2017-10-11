@@ -1,0 +1,102 @@
+<include file="header"/>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=LDtNUc8nseb2rXcVMt3Vkz3664eQUChf"></script>
+<script src="http://mapv.baidu.com/build/mapv.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<!-- ECharts单文件引入 -->
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<style type="text/css">
+    *{
+        padding:0px;
+        margin:0px;
+    }
+    html{height:100%}
+    body{height:100%;margin:0px;padding:0px;margin-top: -70px;}
+</style>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="user_tree" style="height:100%;padding:100px;"></div>
+</div>
+
+<!--用户设备关联图-->
+<script type="text/javascript">
+    var myChart_usertree = echarts.init(document.getElementById('user_tree'));
+    $.post('../UserEchart/user_tree',null,function(mdata){
+        var constMaxRadius = 20;
+        var constMinRadius = 7;
+        var option_usertree = {
+            title : {
+                text: '用户设备关联树',
+                subtext: '用户设备关联'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: '{a} : {b}'
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    restore : {show: true},
+                    magicType: {show: true, type: ['force', 'chord']},
+                    saveAsImage : {show: true}
+                }
+            },
+            legend: {
+                data:mdata.legend
+            },
+            series : [
+                {
+                    type:'force',
+                    name : "用户设备关联树",
+                    sort: 'ascending',
+                    sortSub: 'descending',
+                    ribbonType: false,
+                    radius: '60%',
+                    /*categories : [
+                        {
+                            name: 'test',
+                            itemStyle: {
+                                normal: {
+                                    color : '#ff7f50'
+                                }
+                            }
+                        },
+                        {
+                            name: '设备',
+                            itemStyle: {
+                                normal: {
+                                    color : '#6f57bc'
+                                }
+                            }
+                        },
+                        {
+                            name: '孝行',
+                            itemStyle: {
+                                normal: {
+                                    color : '#af0000'
+                                }
+                            }
+                        }
+                    ],*/
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
+                            },
+                            nodeStyle : {
+                                brushType : 'both',
+                                strokeColor : 'rgba(255,215,0,0.6)',
+                                lineWidth : 1
+                            }
+                        }
+                    },
+                    minRadius : constMinRadius,
+                    maxRadius : constMaxRadius,
+                    nodes : mdata.nodes,
+                    links : mdata.links
+                }
+            ]
+        };
+        myChart_usertree.setOption(option_usertree);
+    });
+</script>
+<include file="footer"/>

@@ -1,0 +1,43 @@
+<include file="header"/>
+<!--<link rel='stylesheet' href='../../Public/Css/HomeCss/hardwarePosition.css'>-->
+<link rel='stylesheet' href='../../Public/Css/TableCss/bootstrap-table.css'>
+<link rel='stylesheet' href='../../Public/Js/TableJs/extensions/click-edit-row/bootstrap-table-click-edit-row.css'>
+<script src='../../Public/Js/TableJs/bootstrap-table.min.js'></script>
+<script src='../../Public/Js/TableJs/bootstrap-table-locale-all.min.js'></script>
+<script src='../../Public/Js/TableJs/locale/bootstrap-table-zh-CN.js'></script>
+<script src='../../Public/Js/TableJs/extensions/click-edit-row/bootstrap-table-click-edit-row.js'></script>
+<style type="text/css">
+    /*html{height:100%}*/
+    body{background-color: #f2f2f2;margin:0px;padding:0px}
+    #container{height:100%}
+
+</style>
+<div class="container" id="container">
+    <div class="row">
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <table class="table table-hover" id="table" data-toggle="table" data-url="equip_json"
+                   data-pagination=true data-page-list='[10, 25, 50, 100, All]' data-select-item-name='btSelectItem'
+                   data-smart-display=true data-search="true" data-show-columns="true" data-show-refresh="true"
+                   data-show-toggle="true" data-show-pagination-switch="true"
+                   data-click-to-select="true" data-click-edit="true" data-unique-id="id">
+                <thead>
+                    <tr>
+                        <th data-field="id"  data-checkbox="true">id</th>
+                        <th data-field="imei" data-editable="input">设备编号</th>
+                        <th data-field="phone" data-editable="input">设备绑定的手机号</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#table').bootstrapTable(); // init via javascript
+
+        $(window).resize(function () {
+            $('#table').bootstrapTable('resetView');
+        });
+    });
+</script>
+<include file="footer"/>

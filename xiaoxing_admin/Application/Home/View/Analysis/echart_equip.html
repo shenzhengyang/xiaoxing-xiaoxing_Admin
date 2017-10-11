@@ -1,0 +1,235 @@
+<include file="header"/>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=LDtNUc8nseb2rXcVMt3Vkz3664eQUChf"></script>
+<script src="http://mapv.baidu.com/build/mapv.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<!-- ECharts单文件引入 -->
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<style type="text/css">
+    *{
+        padding:0px;
+        margin:0px;
+    }
+    html{height:100%}
+    body{height:100%;margin:0px;padding:0px}
+    #container{
+        margin-top: -70px;
+        height:100%;
+        background-color: #FFFFFF;
+    }
+    #map{
+        width:100%;
+        height:100%;
+    }
+</style>
+<!--硬件分布图-->
+<div id="container">
+    <div id="map"></div>
+    <div style="width:100%;position:absolute; left:0px;top:0px;"><h6 style="text-align:center;margin:40px auto;">硬件分布图</h6></div>
+</div>
+<script src="../../Public/Js/HomeJs/mapV.js"></script>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="equip_status" style="height:100%;padding: 100px;"></div>
+</div>
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="equip_battery" style="height:100%;padding: 100px;"></div>
+</div>
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="equip_line" style="widht:80%;height:100%;padding: 100px;"></div>
+</div>
+<!--硬件状态雷达图-->
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('equip_status'));
+    $.post('../EquipStatus/echart_equipStatus',null,function(data){
+
+        var option = {
+            title : {
+                text: '硬件状态雷达图',
+                subtext: '硬件状态'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                orient : 'vertical',
+                data:data.legend
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            polar : [
+                {
+                    indicator : [
+                        { text: '速度（speed）', max: 10},
+                        { text: '电量（battery）', max: 100},
+                        { text: '是否在围栏中（inrail）', max: 1},
+                        { text: '围栏半径（radius）', max: 200},
+                        { text: '设备关联药品数量（medision number）', max: 10}
+                    ]
+                }
+            ],
+            calculable : true,
+            series : [
+                {
+                    name: '硬件状态',
+                    type: 'radar',
+                    data : data.series
+                }
+            ]
+        };
+        myChart.setOption(option);
+    })
+</script>
+<!--硬件电量动态变换图-->
+<script type="text/javascript">
+    var myChart_equip_battery1 = echarts.init(document.getElementById('equip_battery'));
+    $.post('../EquipStatus/echart_battery',null,function(mdata){
+
+
+        var option_equip_battery1 = {
+            title : {
+                text: '设备电量动态图',
+                subtext: '设备电量'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:mdata.legend
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : false,
+                start : 0,
+                end : 100
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : true,
+                    data : mdata.xAxis
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    scale: true,
+                    name : '电量%',
+                    boundaryGap: [0.2, 0.2]
+                }
+            ],
+            series : mdata.series
+        };
+        myChart_equip_battery1.setOption(option_equip_battery1);
+    });
+    var lastData = 11;
+    var axisData;
+    var timeTicket;
+    clearInterval(timeTicket);
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+    timeTicket = setInterval(function (){
+        $.post('../EquipStatus/echart_battery_addData',null,function(mdata){
+
+            // 动态数据接口 addData
+            myChart_equip_battery1.addData(mdata);
+        });
+    }, 2100);
+
+
+</script>
+<script type="text/javascript">
+    var myChart_line = echarts.init(document.getElementById('equip_line'));
+    $.post('../EquipStatus/echart_line',null,function(mdata){
+
+        var option_line = {
+            title : {
+                text: '硬件活动频率图',
+                subtext: '硬件活动频率'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['硬件定位次数']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : mdata.xAxis
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value} 次'
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:'硬件定位次数',
+                    type:'line',
+                    data: mdata.series,
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name: '平均值'}
+                        ]
+                    }
+                }
+            ]
+        };
+        myChart_line.setOption(option_line);
+    });
+
+</script>
+<include file="footer"/>

@@ -1,0 +1,152 @@
+<include file="header"/>
+<style type="text/css">
+    *{
+        padding:0px;
+        margin:0px;
+    }
+    html{height:100%}
+    body{height:100%;margin:0px;padding:0px;margin-top: -70px;}
+</style>
+<!-- ECharts单文件引入 -->
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="main" style="height:100%;padding: 100px;"></div>
+</div>
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="echart_event_river" style="padding: 100px;height:100%"></div>
+</div>
+<div class="container-fluid" style="height:100%;background-color: #FFFFFF;">
+    <div id="echart_wordCloud" style="padding: 100px;height:100%"></div>
+</div>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+    $.post('../Chiyao/chiyao_equipList_json',null,function(data){
+        var option = {
+            title : {
+                text: '设备药品关联图',
+                subtext: '设备药品关联'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: function (params) {
+                    if (params.indicator2) {    // is edge
+                        return params.indicator2 + ' ' + params.name + ' ' + params.indicator;
+                    } else {    // is node
+                        return params.name
+                    }
+                }
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    restore : {show: true},
+                    magicType: {show: true, type: ['force', 'chord']},
+                    dataView : {show: true, readOnly: false},
+                    saveAsImage : {show: true}
+                }
+            },
+            legend: {
+
+                data:data.data
+            },
+            series : [
+                {
+                    name: '设备药品关联图',
+                    type: 'chord',
+                    sort: 'ascending',
+                    sortSub: 'descending',
+                    ribbonType: false,
+                    radius: '60%',
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                rotate: true
+                            }
+                        }
+                    },
+                    minRadius: 7,
+                    maxRadius: 20,
+                    // 使用 nodes links 表达和弦图
+                    nodes: data.nodes,
+                    links: data.links
+                }]
+        };
+        myChart.setOption(option);
+    });
+</script>
+<!--药品的事件河流图-->
+<script type="text/javascript">
+    var myChart_event_river = echarts.init(document.getElementById('echart_event_river'));
+    $.post('../Chiyao/chiyao_event_river',null,function(mdata){
+        var option_event_river = {
+            title : {
+                text: '药品事件河流图',
+                subtext: '吃药时间'
+            },
+            tooltip : {
+                trigger: 'item',
+                enterable: true
+            },
+            legend: {
+                data:mdata.legend
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    restore : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis : [
+                {
+                    type : 'time',
+                    boundaryGap: [0.05,0.1]
+                }
+            ],
+            series :mdata.series
+        };
+
+        myChart_event_river.setOption(option_event_river);
+    });
+</script>
+<!--药品频率的字符云图-->
+<script type="text/javascript">
+    var myChart_wordCloud = echarts.init(document.getElementById('echart_wordCloud'));
+    $.post('../Chiyao/chiyao_wordCloud',null,function(mdata){
+        var option_wordCloud = {
+            title: {
+                text: '药品频率字符云',
+                subtext: '药品频率'
+            },
+            tooltip: {
+                show: true
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    restore : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    saveAsImage : {show: true}
+                }
+            },
+            series: [{
+                name: '药品频率',
+                type: 'wordCloud',
+                size: ['80%', '80%'],
+                textRotation : [0, 45, 90, -45],
+                textPadding: 0,
+                autoSize: {
+                    enable: true,
+                    minSize: 14
+                },
+                data: mdata
+            }]
+        };
+        myChart_wordCloud.setOption(option_wordCloud);
+    });
+</script>
+<include file="footer"/>
