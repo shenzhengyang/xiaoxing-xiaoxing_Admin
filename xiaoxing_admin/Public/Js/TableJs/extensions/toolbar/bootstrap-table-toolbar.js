@@ -98,10 +98,10 @@
 
     $.extend($.fn.bootstrapTable.locales, {
         formatAdvancedSearch: function() {
-            return 'Advanced search';
+            return '高级索搜';
         },
         formatAdvancedCloseButton: function() {
-            return "Close";
+            return "关闭";
         }
     });
 

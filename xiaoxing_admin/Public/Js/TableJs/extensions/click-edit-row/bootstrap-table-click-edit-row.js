@@ -4,7 +4,13 @@
  * https://github.com/horkenw/bootstrap-table
  * Click to edit row for bootstrap-table
  */
-
+/*function updateToServerSide(item, data){
+    var itemid = item;
+    var datas = {'eid': data[0], 'lat': data[1], 'lng': data[2], 'speed': data[3], 'inrail': data[1]}; //傳送至伺服器端的Data產生處，需手動修改對應表格
+    alert(itemid);
+    alert(datas);
+    store( 'data/update', datas)
+}*/
 (function ($) {
     'use strict';
 
@@ -48,7 +54,7 @@
             });
             $('#tooling').remove();
             table.editing = true;
-            // updateToServerSide(table.$data.itemid, txt);
+            updateToServerSide(table.$data.itemid, txt);
             return false;
         };
 
@@ -98,11 +104,13 @@
         }
     }
 
-    function updateToServerSide(item, data){
-        var itemid = $(item).find('a').attr('href').match(/\d+/g)[0];
-        var datas = {'treeId': itemid, 'oldTreeSerialNo': data[0], 'adminDivision': data[2], 'adminUnit': data[3], 'treeAddr': data[1]}; //傳送至伺服器端的Data產生處，需手動修改對應表格
+    /*function updateToServerSide(item, data){
+        var itemid = item;
+        var datas = {'eid': data[0], 'lat': data[1], 'lng': data[2], 'speed': data[3], 'inrail': data[1]}; //傳送至伺服器端的Data產生處，需手動修改對應表格
+        alert(itemid);
+        alert(datas);
         store( 'data/update', datas)
-    }
+    }*/
 
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
         _initTable = BootstrapTable.prototype.initTable,
@@ -140,3 +148,4 @@
         }.bind(this));
     };
 })(jQuery);
+

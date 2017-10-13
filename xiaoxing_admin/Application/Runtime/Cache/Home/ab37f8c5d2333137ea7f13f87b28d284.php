@@ -55,13 +55,13 @@
                 <a rel="nofollow" rel="noreferrer"href="#"><i class="fa fa-fw fa-cog"></i> Third page</a>
             </li>-->
             <li class="dropdown">
-                <a rel="nofollow" rel="noreferrer"href="#" class="dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-fw fa-plus"></i> 数据分析 <span class="caret"></span></a>
+                <a rel="nofollow" rel="noreferrer"href="#" class="dropdown-toggle" data-toggle="dropdown" ><sapn class="glyphicon glyphicon-search"></sapn> 数据分析 <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-header">数据分析图</li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_equip');?>">硬件相关</a></li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_chiyao');?>">药品相关</a></li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_user');?>">用户相关</a></li>
-                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('rail');?>">rail</a></li>
+                    <!--<li><a rel="nofollow" rel="noreferrer"href="<?php echo U('rail');?>">rail</a></li>-->
                     <!--<li><a rel="nofollow" rel="noreferrer"href="#">One more separated link</a></li>-->
                 </ul>
             </li>

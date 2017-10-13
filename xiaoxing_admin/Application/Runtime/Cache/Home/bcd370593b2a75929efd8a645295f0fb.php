@@ -55,13 +55,13 @@
                 <a rel="nofollow" rel="noreferrer"href="#"><i class="fa fa-fw fa-cog"></i> Third page</a>
             </li>-->
             <li class="dropdown">
-                <a rel="nofollow" rel="noreferrer"href="#" class="dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-fw fa-plus"></i> 数据分析 <span class="caret"></span></a>
+                <a rel="nofollow" rel="noreferrer"href="#" class="dropdown-toggle" data-toggle="dropdown" ><sapn class="glyphicon glyphicon-search"></sapn> 数据分析 <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-header">数据分析图</li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_equip');?>">硬件相关</a></li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_chiyao');?>">药品相关</a></li>
-                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('position');?>">position</a></li>
-                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('rail');?>">rail</a></li>
+                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('echart_user');?>">用户相关</a></li>
+                    <!--<li><a rel="nofollow" rel="noreferrer"href="<?php echo U('rail');?>">rail</a></li>-->
                     <!--<li><a rel="nofollow" rel="noreferrer"href="#">One more separated link</a></li>-->
                 </ul>
             </li>
@@ -69,7 +69,7 @@
                 <a rel="nofollow" rel="noreferrer"href="#" class="dropdown-toggle" data-toggle="dropdown" ><span class="glyphicon glyphicon-user"></span> 我的账号 <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-header">账户信息</li>
-                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('User/user');?>"><?php echo '欢迎'.session('username').'!'; ?></a></li>
+                    <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('User/user');?>"><?php echo '欢迎'.session('username_admin').'!'; ?></a></li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('User/changepass');?>">修改密码</a></li>
                     <li><a rel="nofollow" rel="noreferrer"href="<?php echo U('Index/loginOut');?>">退出账户</a></li>
                     <!--<li><a rel="nofollow" rel="noreferrer"href="#">One more separated link</a></li>-->
@@ -105,27 +105,70 @@
 <!--<link rel='stylesheet' href='../../Public/Css/HomeCss/hardwarePosition.css'>-->
 <link rel='stylesheet' href='../../Public/Css/TableCss/bootstrap-table.css'>
 <link rel='stylesheet' href='../../Public/Js/TableJs/extensions/click-edit-row/bootstrap-table-click-edit-row.css'>
+<script src="../../Public/Js/TableJs/TableManager/table_equipment.js"></script>
 <script src='../../Public/Js/TableJs/bootstrap-table.min.js'></script>
 <script src='../../Public/Js/TableJs/bootstrap-table-locale-all.min.js'></script>
 <script src='../../Public/Js/TableJs/locale/bootstrap-table-zh-CN.js'></script>
 <script src='../../Public/Js/TableJs/extensions/click-edit-row/bootstrap-table-click-edit-row.js'></script>
+<script src="../../Public/Js/TableJs/extensions/toolbar/bootstrap-table-toolbar.js"></script>
 <style type="text/css">
     /*html{height:100%}*/
     body{background-color: #f2f2f2;margin:0px;padding:0px}
     #container{height:100%}
-
+    .input-group{
+        margin:10px auto;
+    }
 </style>
 <div class="container" id="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新增设备数据</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-name">设备名称</span>
+                        <input type="text" class="form-control" placeholder="设备名称" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-uid">用户id</span>
+                        <input type="text" class="form-control" placeholder="经度" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-eid">设备编号</span>
+                        <input type="text" class="form-control" placeholder="设备编号" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="model_save" type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <!--table Toolbar-->
+            <div id="toolbar">
+                <button id="button_remove" class="btn btn-default">删除数据</button>
+                <!-- Button trigger modal -->
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">新增数据</button>
+            </div>
             <table class="table table-hover" id="table" data-toggle="table" data-url="equipment_json"
                    data-pagination=true data-page-list='[10, 25, 50, 100, All]' data-select-item-name='btSelectItem'
                    data-smart-display=true data-search="true" data-show-columns="true" data-show-refresh="true"
                    data-show-toggle="true" data-show-pagination-switch="true"
-                   data-click-to-select="true" data-click-edit="true" data-unique-id="id">
+                   data-click-to-select="true" data-click-edit="true" data-unique-id="id"
+                   data-toolbar="#toolbar"
+                   data-advanced-search="true"
+                   data-id-table="advancedTable">
                 <thead>
                     <tr>
-                        <th data-field="id"  data-checkbox="true">id</th>
+                        <th data-checkbox="true">id</th>
+                        <th data-field="id">id</th>
                         <th data-field="name" data-editable="input">设备名称</th>
                         <th data-field="uid" data-editable="input">用户id</th>
                         <th data-field="eid" data-editable="input">设备编号</th>
@@ -135,15 +178,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        $('#table').bootstrapTable(); // init via javascript
-
-        $(window).resize(function () {
-            $('#table').bootstrapTable('resetView');
-        });
-    });
-</script>
 <!--footer-->
 <footer class="copyright">
     <div class="container">
