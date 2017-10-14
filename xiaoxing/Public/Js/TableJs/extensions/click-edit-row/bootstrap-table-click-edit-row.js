@@ -48,7 +48,7 @@
             });
             $('#tooling').remove();
             table.editing = true;
-            // updateToServerSide(table.$data.itemid, txt);
+            updateToServerSide(table.$data.itemid, txt);
             return false;
         };
 
@@ -98,11 +98,11 @@
         }
     }
 
-    function updateToServerSide(item, data){
+    /*function updateToServerSide(item, data){
         var itemid = $(item).find('a').attr('href').match(/\d+/g)[0];
         var datas = {'treeId': itemid, 'oldTreeSerialNo': data[0], 'adminDivision': data[2], 'adminUnit': data[3], 'treeAddr': data[1]}; //傳送至伺服器端的Data產生處，需手動修改對應表格
         store( 'data/update', datas)
-    }
+    }*/
 
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
         _initTable = BootstrapTable.prototype.initTable,
